@@ -1,0 +1,15 @@
+Time Sheet Log
+Total Time: 7:14
+
+07:20pm - 09:44pm (2:24) 
+	Started thinking of game ideas.
+09:50pm - 10:58pm (1:08)
+	Started work on making a font asset
+	Gave up after a lot of effort. This will be last
+10:58pm - 12:14am (1:16)
+	Started work on the player script
+	Got a little stumped on how to best make paths...
+	
+01:04pm - 03:30pm (2:26)
+	Started maping out the different tiles
+	Worked on 
