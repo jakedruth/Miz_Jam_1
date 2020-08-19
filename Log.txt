@@ -25,7 +25,9 @@ Total Time: 10:15
 		Work on a basic camaera controller
 		
 8/19/2020 - (Hrs Worked )
-	1:45pm - 
+	01:45pm - 04:29pm (2:44)
 		Worked on camera zooming in and out
 		Started work on walls/ collisions when walking
 		Added a gun and bullets
+	07:05pm
+		implemented ammo and reloading;

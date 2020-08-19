@@ -44,5 +44,10 @@ public class PlayerInput : MonoBehaviour
         {
             _gunController.FireGun();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _gunController.Reload();
+        }
     }
 }

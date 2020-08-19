@@ -6,7 +6,9 @@ public class Bullet : MonoBehaviour
 {
     public float speed;
     public float damage;
+
     private float _lifeTime = 3;
+
 
     // Update is called once per frame
     void Update()
