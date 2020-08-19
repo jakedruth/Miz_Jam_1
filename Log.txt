@@ -1,15 +1,25 @@
 Time Sheet Log
-Total Time: 7:14
+Total Time: 10:15
 
-07:20pm - 09:44pm (2:24) 
-	Started thinking of game ideas.
-09:50pm - 10:58pm (1:08)
-	Started work on making a font asset
-	Gave up after a lot of effort. This will be last
-10:58pm - 12:14am (1:16)
-	Started work on the player script
-	Got a little stumped on how to best make paths...
+8/15/2020 - (Hrs Worked 4:48)
+	07:20pm - 09:44pm (2:24) 
+		Started thinking of game ideas.
+	09:50pm - 10:58pm (1:08)
+		Started work on making a font asset
+		Gave up after a lot of effort. This will be last
+	10:58pm - 12:14am (1:16)
+		Started work on the player script
+		Got a little stumped on how to best make paths...
 	
-01:04pm - 03:30pm (2:26)
-	Started maping out the different tiles
-	Worked on 
+8/17/2020 - (Hrs Worked 2:26)
+	01:04pm - 03:30pm (2:26) 
+		Started maping out the different tiles
+		Worked on making a "tile editor"
+
+8/18/2020 - (Hrs Worked 3:01)
+	12:39pm - 03:40pm (3:01)
+		Started work on an algorithm to find a path on the tile.
+		created a decent path algorithm (Favors paths to the right)
+		Looking up unity serialzations
+		Kinda fixed the serialzation issues?
+		Work on a camaera

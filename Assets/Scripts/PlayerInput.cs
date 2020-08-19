@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
-        // TODO: Update input
+        // TODO: UpdateRender input
         Vector3 input = Vector3.zero;
         if (Input.GetKey(KeyCode.W))
             input.y += 1;

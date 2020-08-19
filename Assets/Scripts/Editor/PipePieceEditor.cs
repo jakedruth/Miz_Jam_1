@@ -36,95 +36,107 @@ public class PipePieceEditor : Editor
         CreateHorizontalToggle(_pipeWProperty, 3);
 
         EditorGUILayout.PropertyField(_isPadProperty);
+        if (serializedObject.hasModifiedProperties)
+            EditorUtility.SetDirty(target);
 
         serializedObject.ApplyModifiedProperties();
     }
 
     private void CreateHorizontalToggle(SerializedProperty prop, int direction)
     {
+        const float buttonWidth = 90;
         EditorGUILayout.BeginHorizontal();
 
-        EditorGUILayout.PropertyField(prop);
+        EditorGUILayout.PropertyField(prop, GUILayout.Width(170f));
 
         if (prop.objectReferenceValue == null)
         {
-            if (GUILayout.Button("Add Pipe?"))
+            if (GUILayout.Button("Add Pipe", GUILayout.Width(buttonWidth)))
             {
-                CreatePipe(prop, direction);
+                CreatePipe(direction);
+            }
+        }
+        else
+        {
+            if (GUILayout.Button("Remove", GUILayout.Width(buttonWidth)))
+            {
+                RemoveConnection(direction);
             }
         }
 
         EditorGUILayout.EndHorizontal();
     }
 
-    private void CreatePipe(SerializedProperty originalProp, int direction)
+    private void RemoveConnection(int direction)
+    {
+        PipePiece pipe = (PipePiece) target;
+        PipePiece connection = pipe.RemoveConnection(direction);
+
+        pipe.UpdateRender();
+        connection?.UpdateRender();
+
+        EditorUtility.SetDirty(pipe);
+        EditorUtility.SetDirty(connection);
+    }
+
+    private void CreatePipe(int direction)
     {
         // Get the current selected pipe
         PipePiece pipe = (PipePiece) target;
+        PipePiece connection = pipe.AddConnection(direction);
 
-        // Find the location of the next pipe
-        Vector3 pos = pipe.transform.position;
-        Vector3 nextPos = pos;
-
-        if (direction == 0)
-            nextPos += Vector3.up;
-        else if (direction == 1)
-            nextPos += Vector3.right;
-        else if (direction == 2)
-            nextPos += Vector3.down;
-        else if (direction == 3)
-            nextPos += Vector3.left;
-        else
+        // Check to see if the connection succeeded
+        if (connection == null)
         {
-            Debug.LogError("Invalid Direction");
-            return;
-        }
+            // If it failed, Create a new pipe at the location, and try connecting again
+            // calculate the location of the new pipe
+            Vector3 pos = pipe.transform.position;
+            Vector3 nextPos = pos;
 
-        // Determine if a pipe exists at this position;
-        PipePiece nextPipe = null;
-        foreach (PipePiece p in FindObjectsOfType<PipePiece>())
-        {
-            if (p == pipe)
-                continue;
-
-            Vector3 displacement = p.transform.position - nextPos;
-            if (displacement.sqrMagnitude < 0.01f) // close enough to be the at the new location
+            if (direction == 0)
+                nextPos += Vector3.up;
+            else if (direction == 1)
+                nextPos += Vector3.right;
+            else if (direction == 2)
+                nextPos += Vector3.down;
+            else if (direction == 3)
+                nextPos += Vector3.left;
+            else
             {
-                nextPipe = p;
-                break;
+                Debug.LogError("Invalid Direction");
+                return;
             }
-        }
 
-        // If there is no pipe at the next location, create it
-        if (nextPipe == null)
-        {
             PipePiece prefab = Resources.Load<PipePiece>("Prefabs/pipe");
-            nextPipe = Instantiate(prefab, nextPos, Quaternion.identity);
-        }
+            connection = PrefabUtility.InstantiatePrefab(prefab, pipe.transform.parent) as PipePiece;
+            if (connection == null)
+                return;
 
-        // Join the nextPipe with this pipe
-        if (direction == 0)
-        {
-            pipe.pipeN = nextPipe;
-            nextPipe.pipeS = pipe;
-        }
-        else if (direction == 1)
-        {
-            pipe.pipeE = nextPipe;
-            nextPipe.pipeW = pipe;
-        }
-        else if (direction == 2)
-        {
-            pipe.pipeS = nextPipe;
-            nextPipe.pipeN = pipe;
-        }
-        else if (direction == 3)
-        {
-            pipe.pipeW = nextPipe;
-            nextPipe.pipeE = pipe;
+            connection.transform.position = nextPos;
+
+            // Hypothetically should not fail now
+            connection = pipe.AddConnection(direction);
         }
 
         // Set the next pipe to be the selected game object
-        Selection.activeGameObject = nextPipe.gameObject;
+        if(connection != null)
+            Selection.activeGameObject = connection.gameObject;
+
+        pipe.UpdateRender();
+        connection?.UpdateRender();
+
+        EditorUtility.SetDirty(pipe);
+        EditorUtility.SetDirty(connection);
+    }
+
+    [MenuItem("Tools/Fix Pipes")]
+    public static void FixPipes()
+    {
+        PipePiece.CalculateNeighborsOfAllPipes();
+        foreach (PipePiece p in FindObjectsOfType<PipePiece>())
+        {
+            p.UpdateRender();
+            EditorUtility.SetDirty(p);
+        }
     }
 }
