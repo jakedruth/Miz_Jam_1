@@ -9,6 +9,8 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class PipePieceEditor : Editor
 {
+    private PipePiece _targetPipe;
+
     private SerializedProperty _isPadProperty;
 
     private SerializedProperty _pipeNProperty;
@@ -18,6 +20,7 @@ public class PipePieceEditor : Editor
 
     void OnEnable()
     {
+        _targetPipe = (PipePiece) target;
         _isPadProperty= serializedObject.FindProperty("isPad");
 
         _pipeNProperty = serializedObject.FindProperty("pipeN");
@@ -33,13 +36,14 @@ public class PipePieceEditor : Editor
         CreateHorizontalToggle(_pipeNProperty, 0);
         CreateHorizontalToggle(_pipeEProperty, 1);
         CreateHorizontalToggle(_pipeSProperty, 2);
-        CreateHorizontalToggle(_pipeWProperty, 3);
+        CreateHorizontalToggle(_pipeWProperty, 3); 
 
         EditorGUILayout.PropertyField(_isPadProperty);
-        if (serializedObject.hasModifiedProperties)
-            EditorUtility.SetDirty(target);
-
+        
         serializedObject.ApplyModifiedProperties();
+
+        _targetPipe.UpdateRender();
+        EditorUtility.SetDirty(_targetPipe);
     }
 
     private void CreateHorizontalToggle(SerializedProperty prop, int direction)
@@ -69,28 +73,26 @@ public class PipePieceEditor : Editor
 
     private void RemoveConnection(int direction)
     {
-        PipePiece pipe = (PipePiece) target;
-        PipePiece connection = pipe.RemoveConnection(direction);
+        PipePiece connection = _targetPipe.RemoveConnection(direction);
 
-        pipe.UpdateRender();
-        connection?.UpdateRender();
-
-        EditorUtility.SetDirty(pipe);
-        EditorUtility.SetDirty(connection);
+        if (connection != null)
+        {
+            connection.UpdateRender();
+            EditorUtility.SetDirty(connection);
+        }
     }
 
     private void CreatePipe(int direction)
     {
         // Get the current selected pipe
-        PipePiece pipe = (PipePiece) target;
-        PipePiece connection = pipe.AddConnection(direction);
+        PipePiece connection = _targetPipe.AddConnection(direction);
 
         // Check to see if the connection succeeded
         if (connection == null)
         {
             // If it failed, Create a new pipe at the location, and try connecting again
             // calculate the location of the new pipe
-            Vector3 pos = pipe.transform.position;
+            Vector3 pos = _targetPipe.transform.position;
             Vector3 nextPos = pos;
 
             if (direction == 0)
@@ -108,25 +110,25 @@ public class PipePieceEditor : Editor
             }
 
             PipePiece prefab = Resources.Load<PipePiece>("Prefabs/pipe");
-            connection = PrefabUtility.InstantiatePrefab(prefab, pipe.transform.parent) as PipePiece;
+            connection = PrefabUtility.InstantiatePrefab(prefab, _targetPipe.transform.parent) as PipePiece;
             if (connection == null)
                 return;
 
             connection.transform.position = nextPos;
 
             // Hypothetically should not fail now
-            connection = pipe.AddConnection(direction);
+            connection = _targetPipe.AddConnection(direction);
         }
 
         // Set the next pipe to be the selected game object
         if(connection != null)
             Selection.activeGameObject = connection.gameObject;
 
-        pipe.UpdateRender();
-        connection?.UpdateRender();
-
-        EditorUtility.SetDirty(pipe);
-        EditorUtility.SetDirty(connection);
+        if (connection != null)
+        {
+            connection.UpdateRender();
+            EditorUtility.SetDirty(connection);
+        }
     }
 
     [MenuItem("Tools/Fix Pipes")]

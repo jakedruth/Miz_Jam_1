@@ -22,4 +22,10 @@ Total Time: 10:15
 		created a decent path algorithm (Favors paths to the right)
 		Looking up unity serialzations
 		Kinda fixed the serialzation issues?
-		Work on a camaera
+		Work on a basic camaera controller
+		
+8/19/2020 - (Hrs Worked )
+	1:45pm - 
+		Worked on camera zooming in and out
+		Started work on walls/ collisions when walking
+		Added a gun and bullets

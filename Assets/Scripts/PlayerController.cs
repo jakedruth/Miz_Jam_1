@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private Rigidbody2D _rb2D;
+
     public float walkSpeed;
     public float pipeSpeed;
     public float pipeSpeedModifier;
@@ -20,6 +22,11 @@ public class PlayerController : MonoBehaviour
     private PipePiece _onPipe;
     private bool _movingOnPipe;
 
+    void Awake()
+    {
+        _rb2D = GetComponent<Rigidbody2D>();
+    }
+
     public void Move(Vector3 input)
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -32,14 +39,20 @@ public class PlayerController : MonoBehaviour
                     if (!pipe.isPad)
                         continue;
 
-                    Vector3 displacement = pipe.transform.position - transform.position;
-                    const float threshHold = 1f;
-                    if (displacement.sqrMagnitude <= threshHold)
+                    Vector2 displacement = pipe.transform.position - transform.position;
+
+                    const float maxDistance = 1f;
+                    if (displacement.sqrMagnitude <= maxDistance * maxDistance)
                     {
+
                         transform.position = pipe.transform.position;
                         _onPipe = pipe;
                         _velocity = Vector3.zero;
                         transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
+
+                        FindObjectOfType<CameraController>().AdjustZoomTOverTime(1, 0.75f);
+                        _rb2D.simulated = false;
+
                         break;
                     }
                 }
@@ -49,6 +62,8 @@ public class PlayerController : MonoBehaviour
                 if (!_movingOnPipe)
                 {
                     _onPipe = null;
+                    FindObjectOfType<CameraController>().AdjustZoomTOverTime(0, 0.75f);
+                    _rb2D.simulated = true;
                 }
             }
         }
@@ -130,11 +145,12 @@ public class PlayerController : MonoBehaviour
             float targetSway = (input.sqrMagnitude < 0.1) ? 0 : maxTilt;
             _shakeValue = Mathf.MoveTowards(_shakeValue, targetSway, acceleration * Time.deltaTime);
             float angle = Mathf.Sin(Time.time * tiltPerSecond) * _shakeValue;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.GetChild(0).rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             // Movement code
             Vector3 targetVelocity = (input.Equals(Vector3.zero) ? Vector3.zero : input) * walkSpeed;
             _velocity = Vector3.MoveTowards(_velocity, targetVelocity, acceleration * Time.deltaTime);
+
             transform.position = transform.position + _velocity * Time.deltaTime;
         }
     }
