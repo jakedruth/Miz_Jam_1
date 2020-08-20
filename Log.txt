@@ -1,5 +1,5 @@
 Time Sheet Log
-Total Time: 10:15
+Total Time: 19:09
 
 8/15/2020 - (Hrs Worked 4:48)
 	07:20pm - 09:44pm (2:24) 
@@ -24,17 +24,19 @@ Total Time: 10:15
 		Kinda fixed the serialzation issues?
 		Work on a basic camaera controller
 		
-8/19/2020 - (Hrs Worked )
+8/19/2020 - (Hrs Worked 8:54)
 	01:45pm - 04:29pm (2:44)
 		Worked on camera zooming in and out
 		Started work on walls/ collisions when walking
 		Added a gun and bullets
-	07:05pm - 8:45 ()
+	07:05pm - 8:45 (1:40)
 		implemented ammo and reloading
 		Got Dinner
-	09:00pm - 
+	09:00pm - 01:30am (4:30)
 		Relized that was a short dinner
 		Implemented a switch and trigger system
 		Found a good pallete
 		Created an ammo pickup
 		Created destroyable crates
+		added simple enimies
+		Started the layout of the first level
