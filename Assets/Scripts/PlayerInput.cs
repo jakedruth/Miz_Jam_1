@@ -41,14 +41,7 @@ public class PlayerInput : MonoBehaviour
             _gunController.AimAt(mouse);
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            _gunController.FireGun();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) || Input.GetMouseButtonDown(1))
-        {
-            _gunController.Reload();
-        }
+        _gunController.HandleInput(Input.GetMouseButtonDown(0), Input.GetMouseButton(0));
+        _gunController.HandleReloading(Input.GetKeyDown(KeyCode.R) || Input.GetMouseButtonDown(1));
     }
 }

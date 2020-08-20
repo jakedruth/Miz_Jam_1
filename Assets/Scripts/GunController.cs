@@ -8,14 +8,15 @@ public class GunController : MonoBehaviour
     private Transform _bulletSpawn;
     private Transform _reloadDisplayHolder;
     private Transform _reloadDisplayFill;
-    public int startingAmmo;
 
     public float bulletSpray;
-    public int maxAmmo;
-    public int AmmoCount { get; set; }
+
+    public float bulletsPerSecond;
+    public float FireRate { get { return 1 / bulletsPerSecond; } }
+    private float _fireTimer;
+
     public int clipSize;
     public int AmmoInClip { get; set; }
-    public int TotalAmmo { get { return AmmoInClip + AmmoCount;} }
     public float reloadTime;
     private float _reloadTimer;
 
@@ -28,14 +29,40 @@ public class GunController : MonoBehaviour
         _reloadDisplayHolder = transform.GetChild(2);
         _reloadDisplayFill = _reloadDisplayHolder.GetChild(2);
         
-        PickUpAmmo(startingAmmo);
         Reload(true);
         _reloadDisplayHolder.gameObject.SetActive(false);
     }
 
-    void Update()
+    public void HandleInput(bool onDown, bool isDown)
+    {
+        if (IsReloading)
+            return;
+
+        if (AmmoInClip == 0 && onDown)
+        {
+            Reload();
+            return;
+        }
+
+        if (onDown)
+            _fireTimer = 0;
+
+        if (isDown)
+        {
+            _fireTimer -= Time.deltaTime;
+            if (_fireTimer <= 0)
+            {
+                FireGun();
+            }
+        }
+    }
+
+    public void HandleReloading(bool reload)
     {
         // TODO: Convert Gun To machine-gun
+
+        if (reload)
+            Reload();
 
         if (IsReloading)
         {
@@ -48,30 +75,14 @@ public class GunController : MonoBehaviour
             }
 
             float t = (reloadTime - _reloadTimer) / reloadTime;
+            
             _reloadDisplayFill.localScale = new Vector3(t , 1 , 1);
         }
     }
-
-    public void PickUpAmmo(int amount)
-    {
-        int total = amount + TotalAmmo;
-
-        _gunHolder.gameObject.SetActive(total > 0);
-
-        if (amount == 0)
-            return;
-
-        AmmoCount = Mathf.Clamp(total, 0, maxAmmo);
-
-        if (amount == total) 
-            Reload();
-    }
+    
 
     public void AimAt(Vector3 pos)
     {
-        if (TotalAmmo == 0)
-            return;
-
         Vector2 delta = pos - transform.position;
 
         float angle = Vector2.SignedAngle(Vector2.right, delta);
@@ -82,54 +93,43 @@ public class GunController : MonoBehaviour
         _gunHolder.localScale = scale;
     }
 
-    public void FireGun()
+    private void FireGun()
     {
         // Check to see if you can fire
-        if(IsReloading || TotalAmmo == 0)
+        if(IsReloading || AmmoInClip == 0)
             return;
-
-        if (AmmoInClip == 0)
-        {
-            Reload();
-            return;
-        }
 
         // Remove a bullet from the clip
         AmmoInClip--;
+        _fireTimer = FireRate;
 
         // Create a bullet with the angle of the gun
         float angle = _gunHolder.rotation.eulerAngles.z;
         angle += Random.Range(-bulletSpray, bulletSpray) * 0.5f;
         Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullet");
         Bullet bullet = Instantiate(prefab, _bulletSpawn.position, Quaternion.AngleAxis(angle, Vector3.forward));
-
-        // Check to see if the player has no more bullets
-        if (TotalAmmo == 0) 
-        {
-            _gunHolder.gameObject.SetActive(false);
-        }
     }
 
     public void Reload(bool ignoreReloadTime = false)
     {
         int neededAmmo = clipSize - AmmoInClip;
-        if(neededAmmo == 0 || AmmoCount <= 0)
+        if(neededAmmo == 0)
             return;
-        
-        if (neededAmmo < AmmoCount)
+
+        AmmoInClip = clipSize;
+
+
+        if (ignoreReloadTime)
         {
-            AmmoInClip += neededAmmo;
-            AmmoCount -= neededAmmo;
+            _reloadDisplayHolder.gameObject.SetActive(false);
+            _reloadTimer = 0;
         }
         else
         {
-            AmmoInClip += AmmoCount;
-            AmmoCount = 0;
-        }
-
-        _reloadDisplayHolder.gameObject.SetActive(!ignoreReloadTime);
-
-        if (!ignoreReloadTime) 
+            _reloadDisplayHolder.gameObject.SetActive(true);
             _reloadTimer = reloadTime;
+        }
     }
+
+    
 }
