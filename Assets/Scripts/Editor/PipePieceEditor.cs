@@ -92,17 +92,17 @@ public class PipePieceEditor : Editor
         {
             // If it failed, Create a new pipe at the location, and try connecting again
             // calculate the location of the new pipe
-            Vector3 pos = _targetPipe.transform.position;
-            Vector3 nextPos = pos;
+            Vector2 pos = _targetPipe.transform.position;
+            Vector2 nextPos = pos;
 
             if (direction == 0)
-                nextPos += Vector3.up;
+                nextPos += Vector2.up;
             else if (direction == 1)
-                nextPos += Vector3.right;
+                nextPos += Vector2.right;
             else if (direction == 2)
-                nextPos += Vector3.down;
+                nextPos += Vector2.down;
             else if (direction == 3)
-                nextPos += Vector3.left;
+                nextPos += Vector2.left;
             else
             {
                 Debug.LogError("Invalid Direction");

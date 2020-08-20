@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D _rb2D;
 
+    public int maxHealth;
+    private int _health;
+
     public float walkSpeed;
     public float pipeSpeed;
     public float pipeSpeedModifier;
@@ -48,10 +51,14 @@ public class PlayerController : MonoBehaviour
                         transform.position = pipe.transform.position;
                         _onPipe = pipe;
                         _velocity = Vector3.zero;
-                        transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
-
+                        transform.rotation = Quaternion.AngleAxis(_shakeValue = 0, Vector3.forward);
+                        
                         FindObjectOfType<CameraController>().AdjustZoomTOverTime(1, 0.75f);
-                        _rb2D.simulated = false;
+                        //_rb2D.simulated = false;
+                        Physics2D.IgnoreLayerCollision(
+                            LayerMask.NameToLayer("Player"), 
+                            LayerMask.NameToLayer("Walls"),
+                            true);
 
                         break;
                     }
@@ -63,7 +70,11 @@ public class PlayerController : MonoBehaviour
                 {
                     _onPipe = null;
                     FindObjectOfType<CameraController>().AdjustZoomTOverTime(0, 0.75f);
-                    _rb2D.simulated = true;
+                    //_rb2D.simulated = true;
+                    Physics2D.IgnoreLayerCollision(
+                        LayerMask.NameToLayer("Player"),
+                        LayerMask.NameToLayer("Walls"),
+                        false);
                 }
             }
         }
@@ -152,6 +163,15 @@ public class PlayerController : MonoBehaviour
             _velocity = Vector3.MoveTowards(_velocity, targetVelocity, acceleration * Time.deltaTime);
 
             transform.position = transform.position + _velocity * Time.deltaTime;
+        }
+    }
+
+    public void AdjustHealth(int value)
+    {
+        _health = Mathf.Clamp(_health + value, 0, maxHealth);
+        if (_health == 0)
+        {
+            Debug.Log("Dead!");
         }
     }
 }

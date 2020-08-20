@@ -8,11 +8,14 @@ public class GunController : MonoBehaviour
     private Transform _bulletSpawn;
     private Transform _reloadDisplayHolder;
     private Transform _reloadDisplayFill;
+    public int startingAmmo;
 
     public float bulletSpray;
-    public int ammoCount;
+    public int maxAmmo;
+    public int AmmoCount { get; set; }
     public int clipSize;
-    private int _ammoInClip;
+    public int AmmoInClip { get; set; }
+    public int TotalAmmo { get { return AmmoInClip + AmmoCount;} }
     public float reloadTime;
     private float _reloadTimer;
 
@@ -24,14 +27,16 @@ public class GunController : MonoBehaviour
         _bulletSpawn = _gunHolder.GetChild(0);
         _reloadDisplayHolder = transform.GetChild(2);
         _reloadDisplayFill = _reloadDisplayHolder.GetChild(2);
-
-        Reload();
-        _reloadTimer = 0;
+        
+        PickUpAmmo(startingAmmo);
+        Reload(true);
         _reloadDisplayHolder.gameObject.SetActive(false);
     }
 
     void Update()
     {
+        // TODO: Convert Gun To machine-gun
+
         if (IsReloading)
         {
             _reloadTimer -= Time.deltaTime;
@@ -47,11 +52,29 @@ public class GunController : MonoBehaviour
         }
     }
 
+    public void PickUpAmmo(int amount)
+    {
+        int total = amount + TotalAmmo;
+
+        _gunHolder.gameObject.SetActive(total > 0);
+
+        if (amount == 0)
+            return;
+
+        AmmoCount = Mathf.Clamp(total, 0, maxAmmo);
+
+        if (amount == total) 
+            Reload();
+    }
+
     public void AimAt(Vector3 pos)
     {
-        Vector3 delta = pos - transform.position;
+        if (TotalAmmo == 0)
+            return;
 
-        float angle = Vector3.SignedAngle(Vector3.right, delta, Vector3.forward);
+        Vector2 delta = pos - transform.position;
+
+        float angle = Vector2.SignedAngle(Vector2.right, delta);
         _gunHolder.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         Vector3 scale = _gunHolder.localScale;
@@ -61,41 +84,52 @@ public class GunController : MonoBehaviour
 
     public void FireGun()
     {
-        if(IsReloading)
+        // Check to see if you can fire
+        if(IsReloading || TotalAmmo == 0)
             return;
 
-        if (_ammoInClip == 0)
+        if (AmmoInClip == 0)
         {
             Reload();
             return;
         }
 
-        _ammoInClip--;
+        // Remove a bullet from the clip
+        AmmoInClip--;
 
+        // Create a bullet with the angle of the gun
         float angle = _gunHolder.rotation.eulerAngles.z;
         angle += Random.Range(-bulletSpray, bulletSpray) * 0.5f;
         Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullet");
         Bullet bullet = Instantiate(prefab, _bulletSpawn.position, Quaternion.AngleAxis(angle, Vector3.forward));
+
+        // Check to see if the player has no more bullets
+        if (TotalAmmo == 0) 
+        {
+            _gunHolder.gameObject.SetActive(false);
+        }
     }
 
-    public void Reload()
+    public void Reload(bool ignoreReloadTime = false)
     {
-        int neededAmmo = clipSize - _ammoInClip;
-        if(neededAmmo == 0)
+        int neededAmmo = clipSize - AmmoInClip;
+        if(neededAmmo == 0 || AmmoCount <= 0)
             return;
         
-        if (neededAmmo < ammoCount)
+        if (neededAmmo < AmmoCount)
         {
-            _ammoInClip += neededAmmo;
-            ammoCount -= neededAmmo;
+            AmmoInClip += neededAmmo;
+            AmmoCount -= neededAmmo;
         }
         else
         {
-            _ammoInClip += ammoCount;
-            ammoCount = 0;
+            AmmoInClip += AmmoCount;
+            AmmoCount = 0;
         }
 
-        _reloadTimer = reloadTime;
-        _reloadDisplayHolder.gameObject.SetActive(true);
+        _reloadDisplayHolder.gameObject.SetActive(!ignoreReloadTime);
+
+        if (!ignoreReloadTime) 
+            _reloadTimer = reloadTime;
     }
 }

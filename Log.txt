@@ -29,5 +29,12 @@ Total Time: 10:15
 		Worked on camera zooming in and out
 		Started work on walls/ collisions when walking
 		Added a gun and bullets
-	07:05pm
-		implemented ammo and reloading;
+	07:05pm - 8:45 ()
+		implemented ammo and reloading
+		Got Dinner
+	09:00pm - 
+		Relized that was a short dinner
+		Implemented a switch and trigger system
+		Found a good pallete
+		Created an ammo pickup
+		Created destroyable crates

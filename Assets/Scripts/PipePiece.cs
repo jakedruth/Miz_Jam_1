@@ -8,7 +8,6 @@ public class PipePiece : MonoBehaviour
 {
     private static bool _checkNeighborsOnStart;
     public bool isPad;
-    // todo: update render on change
 
     [SerializeField]
     public PipePiece pipeN;
@@ -119,6 +118,8 @@ public class PipePiece : MonoBehaviour
                     }
                 }
 
+                #region Old Testing Code
+
                 // else, see if we can find a pipe in the right location
 
                 //Vector3 pos = pipe.transform.position;
@@ -166,6 +167,8 @@ public class PipePiece : MonoBehaviour
                 //        break;
                 //    }
                 //}
+
+                #endregion
             }
         }
     }
@@ -192,17 +195,17 @@ public class PipePiece : MonoBehaviour
     public PipePiece AddConnection(int direction)
     {
         // Find the location of the next pipe
-        Vector3 pos = transform.position;
-        Vector3 nextPos = pos;
+        Vector2 pos = transform.position;
+        Vector2 nextPos = pos;
 
         if (direction == 0)
-            nextPos += Vector3.up;
+            nextPos += Vector2.up;
         else if (direction == 1)
-            nextPos += Vector3.right;
+            nextPos += Vector2.right;
         else if (direction == 2)
-            nextPos += Vector3.down;
+            nextPos += Vector2.down;
         else if (direction == 3)
-            nextPos += Vector3.left;
+            nextPos += Vector2.left;
         else
         {
             Debug.LogError("Invalid Direction");
@@ -216,7 +219,9 @@ public class PipePiece : MonoBehaviour
             if (p == this)
                 continue;
 
-            Vector3 displacement = p.transform.position - nextPos;
+            Vector2 pipePos = p.transform.position;
+
+            Vector2 displacement = pipePos - nextPos;
             if (displacement.sqrMagnitude < 0.01f) // close enough to be the at the new location
             {
                 connection = p;
@@ -251,6 +256,9 @@ public class PipePiece : MonoBehaviour
             pipeW = connection;
             connection.pipeE = this;
         }
+
+        UpdateRender();
+        connection.UpdateRender();
 
         return connection;
     }
@@ -313,4 +321,10 @@ public class PipePiece : MonoBehaviour
     }
 }
 
-
+public enum Direction
+{
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1079957647}
   - component: {fileID: 1079957648}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gun (pistol)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingOrder: 10
   m_Sprite: {fileID: -3491254696737965218, guid: e86f7d29ad895544eab190a9306a60ff,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9490196, g: 0.64705884, b: 0.25490198, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1166256798}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GunHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7697602639094441565}
   - component: {fileID: 8866193288205617831}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EyesBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 4189172107048035056}
   - component: {fileID: 7696537092572260170}
   - component: {fileID: 432965334922532031}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ReloadDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,8 +234,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.106}
-  m_SizeDelta: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0.6}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7696537092572260170
 Canvas:
@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 3063808198229496754}
   - component: {fileID: 2703577564041843197}
   - component: {fileID: 7767713229892227919}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -314,8 +314,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.5}
-  m_SizeDelta: {x: 1.09, y: 0.09}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.95, y: 0.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2703577564041843197
 CanvasRenderer:
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9490196, g: 0.64705884, b: 0.25490198, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 4641584963856655796}
   - component: {fileID: 468591467}
   - component: {fileID: 468591468}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -405,6 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b953cb064b9c04fa3700c3f0b4669e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 0
   walkSpeed: 4
   pipeSpeed: 8
   pipeSpeedModifier: 2
@@ -435,8 +436,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea1bc13c0a9602489368a6c62d86b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpray: 10
-  ammoCount: 100
+  startingAmmo: 0
+  bulletSpray: 3
+  maxAmmo: 90
   clipSize: 6
   reloadTime: 0.75
 --- !u!50 &468591467
@@ -486,7 +488,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5432695111679305690}
   - component: {fileID: 5432695111679305689}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +572,7 @@ GameObject:
   - component: {fileID: 5327653417148717087}
   - component: {fileID: 2593396222007497052}
   - component: {fileID: 3046678351954036710}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BorderRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,11 +593,11 @@ RectTransform:
   m_Father: {fileID: 4189172107048035056}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.5, y: 0.5}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.9, y: 0.9}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2593396222007497052
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -617,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9490196, g: 0.64705884, b: 0.25490198, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -646,7 +648,7 @@ GameObject:
   - component: {fileID: 4080266553801323320}
   - component: {fileID: 1332429784272802660}
   - component: {fileID: 8288057384920760556}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BorderLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -667,11 +669,11 @@ RectTransform:
   m_Father: {fileID: 4189172107048035056}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.5, y: 0.5}
-  m_SizeDelta: {x: 0, y: 0.000000059604645}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0.9, y: 0.9}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1332429784272802660
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -693,7 +695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9490196, g: 0.64705884, b: 0.25490198, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -720,7 +722,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7170792893328201642}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -34,6 +34,7 @@ public class PlayerInput : MonoBehaviour
 
         // Gun Code
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction + Vector3.up * 0.1f, Color.red);
         if (_plane.Raycast(ray, out float enter))
         {
             Vector3 mouse = ray.GetPoint(enter);
@@ -45,7 +46,7 @@ public class PlayerInput : MonoBehaviour
             _gunController.FireGun();
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetMouseButtonDown(1))
         {
             _gunController.Reload();
         }

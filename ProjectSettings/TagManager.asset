@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Wall
   - Enemy
+  - Toggle
+  - Trigger
+  - Crate
+  - Ammo
   layers:
   - Default
   - TransparentFX
@@ -15,9 +19,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Walls
+  - Player
+  - Enemies
   - 
   - 
   - 

@@ -5,10 +5,10 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed;
-    public float damage;
-
+    public int damage;
     private float _lifeTime = 3;
 
+    public bool hurtPlayer;
 
     // Update is called once per frame
     void Update()
@@ -32,8 +32,32 @@ public class Bullet : MonoBehaviour
                 default:
                     Debug.Log("Unknown Collision Type with object", hit.transform.gameObject);
                     break;
+                case "Player":
+                    if (hurtPlayer)
+                    {
+                        hit.transform.GetComponent<PlayerController>().AdjustHealth(-damage);
+                        Destroy(gameObject);
+                    }
+                    break;
+                case "Enemy":
+                    if (!hurtPlayer)
+                    {
+                        hit.transform.GetComponent<Enemy>().AdjustHealth(-damage);
+                        Destroy(gameObject);
+                    }
+                    break;
                 case "Wall":
                     Destroy(gameObject);
+                    break;
+                case "Toggle":
+                    Destroy(gameObject);
+                    hit.transform.GetComponent<Switch>().ToggleSwitch();
+                    break;
+                case "Crate":
+                    Destroy(gameObject);
+                    Destroy(hit.transform.gameObject);
+                    break;
+                case "Ammo":
                     break;
             }
         }
