@@ -44,3 +44,5 @@ Total Time: 19:09
 8/20/2020 - (Hrs Worked )
 	04:07PM - 
 		Tested making a webgl build
+		Started working on a main menu
+		added a camera shake

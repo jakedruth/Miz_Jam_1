@@ -2,18 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CameraController : MonoBehaviour
 {
     private Camera _cam;
     public Transform target;
-    public float speed;
+    private Vector3 _pos;
+    private Vector3 _offset;
+
+    [Header("Zoom Values")]
     public float minZoom;
     public float maxZoom;
     private float _zoomT = 0;
     private Coroutine _zoomCoroutine;
+    public float speed;
+    
+    [Header("Shake Values")]
+    public int shakeCount;
+    public float shakeSpeed;
+    public float maxDelta;
+    
 
-    // Start is called before the first frame update
     void Start()
     {
         _cam = transform.GetComponentInChildren<Camera>();
@@ -27,8 +37,8 @@ public class CameraController : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position =
-                Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
+            _pos = Vector3.MoveTowards(_pos, target.transform.position, speed * Time.deltaTime);
+            transform.position = _pos + _offset;
         }
 
         UpdateCameraSize();
@@ -81,5 +91,39 @@ public class CameraController : MonoBehaviour
         _zoomT = t;
 
         _zoomCoroutine = null;
+    }
+
+    [ContextMenu("Shake Camera")]
+    public void ApplyCameraShake()
+    {
+        StartCoroutine(HandleCameraShake());
+    }
+
+    private IEnumerator HandleCameraShake()
+    {
+        
+        List<Vector3> shakePoints = new List<Vector3>();
+
+        float randAngle = Random.Range(0, Mathf.PI * 2);
+
+        for (float i = shakeCount; i >= 0; i--)
+        {
+            float t = i / shakeCount;
+            randAngle += Mathf.PI + Random.Range(-Mathf.PI * 0.25f, Mathf.PI * 0.25f) * 0.5f;
+            randAngle %= 2 * Mathf.PI;
+            float mag = t * maxDelta;
+            Vector3 pos = new Vector3(Mathf.Cos(randAngle) * mag, Mathf.Sin(randAngle) * mag);
+            shakePoints.Add(pos);
+        }
+
+        while (shakePoints.Count > 0)
+        {
+            _offset = Vector3.MoveTowards(_offset, shakePoints[0], shakeSpeed * Time.deltaTime);
+            
+            if(_offset == shakePoints[0])
+                shakePoints.RemoveAt(0);
+
+            yield return null;
+        }
     }
 }

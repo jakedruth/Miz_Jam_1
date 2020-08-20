@@ -41,7 +41,9 @@ public class BeginEncounter : MonoBehaviour
                     if (_enemiesRemaining > 0) 
                         return;
                     
-                    Destroy(gameObject);
+                    if(gameObject != null)
+                        Destroy(gameObject);
+                    
                     if (!takeOverCamera) 
                         return;
 
