@@ -78,6 +78,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 90
   bulletSpray: 15
+  bulletsPerSecond: 2
 --- !u!1 &3914117355805257886
 GameObject:
   m_ObjectHideFlags: 0

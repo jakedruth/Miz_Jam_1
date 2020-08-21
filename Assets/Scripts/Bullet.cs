@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
                 case "Player":
                     if (hurtPlayer)
                     {
-                        hit.transform.GetComponent<PlayerController>().AdjustHealth(-damage);
+                        hit.transform.GetComponent<PlayerController>().AdjustHealth(-damage, transform.right.normalized);
                         Destroy(gameObject);
                     }
                     break;

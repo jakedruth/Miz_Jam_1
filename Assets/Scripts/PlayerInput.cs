@@ -14,6 +14,8 @@ public class PlayerInput : MonoBehaviour
     {
         _playerController = GetComponent<PlayerController>();
         _gunController = GetComponent<GunController>();
+
+        HealthDisplaySystem.DisplayHP(true);
     }
 
     void Update()

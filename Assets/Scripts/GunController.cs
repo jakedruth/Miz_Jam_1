@@ -24,13 +24,16 @@ public class GunController : MonoBehaviour
 
     void Awake()
     {
-        _gunHolder = transform.GetChild(1);
+        _gunHolder = transform.Find("GunHolder");
         _bulletSpawn = _gunHolder.GetChild(0);
-        _reloadDisplayHolder = transform.GetChild(2);
+
+        _reloadDisplayHolder = transform.Find("ReloadDisplay");
         _reloadDisplayFill = _reloadDisplayHolder.GetChild(2);
-        
-        Reload(true);
+
+        AmmoInClip = clipSize;
         _reloadDisplayHolder.gameObject.SetActive(false);
+
+        AmmoDisplaySystem.DisplayAmmo(true);
     }
 
     public void HandleInput(bool onDown, bool isDown)
@@ -70,7 +73,12 @@ public class GunController : MonoBehaviour
 
             if (_reloadTimer < 0)
             {
+
+                AmmoInClip = clipSize;
                 _reloadTimer = 0;
+                _fireTimer = 0;
+
+                AmmoDisplaySystem.SetAmmo(AmmoInClip);
                 _reloadDisplayHolder.gameObject.SetActive(false);
             }
 
@@ -101,12 +109,13 @@ public class GunController : MonoBehaviour
 
         // Remove a bullet from the clip
         AmmoInClip--;
-        _fireTimer = FireRate;
+        AmmoDisplaySystem.SetAmmo(AmmoInClip);
+        _fireTimer += FireRate;
 
         // Create a bullet with the angle of the gun
         float angle = _gunHolder.rotation.eulerAngles.z;
         angle += Random.Range(-bulletSpray, bulletSpray) * 0.5f;
-        Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullet");
+        Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullets/PlayerBullet");
         Bullet bullet = Instantiate(prefab, _bulletSpawn.position, Quaternion.AngleAxis(angle, Vector3.forward));
     }
 
@@ -115,9 +124,6 @@ public class GunController : MonoBehaviour
         int neededAmmo = clipSize - AmmoInClip;
         if(neededAmmo == 0)
             return;
-
-        AmmoInClip = clipSize;
-
 
         if (ignoreReloadTime)
         {

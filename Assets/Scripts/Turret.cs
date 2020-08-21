@@ -12,6 +12,9 @@ public class Turret : MonoBehaviour
 
     public float rotationSpeed;
     public float bulletSpray;
+    public float bulletsPerSecond;
+    public float FireRate { get { return 1 / bulletsPerSecond; } }
+    private float _fireTimer;
 
     void Awake()
     {
@@ -40,6 +43,16 @@ public class Turret : MonoBehaviour
                     Quaternion targetLookAt = Quaternion.AngleAxis(angle, Vector3.forward);
                     Quaternion rotation = Quaternion.RotateTowards(_gunHolder.rotation, targetLookAt, rotationSpeed * Time.deltaTime);
                     _gunHolder.rotation = rotation;
+
+                    float deltaAngle = Quaternion.Angle(rotation, targetLookAt);
+                    if (deltaAngle <= 70)
+                    {
+                        _fireTimer -= Time.deltaTime;
+                        if (_fireTimer <= 0)
+                        {
+                            Fire();
+                        }
+                    }
                 }
             }
         }
@@ -47,10 +60,12 @@ public class Turret : MonoBehaviour
 
     private void Fire()
     {
+        _fireTimer += FireRate;
+
         // Create a bullet with the angle of the gun
         float angle = _gunHolder.rotation.eulerAngles.z;
         angle += Random.Range(-bulletSpray, bulletSpray) * 0.5f;
-        Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullet");
+        Bullet prefab = Resources.Load<Bullet>("Prefabs/Bullets/TurretBullet");
         Bullet bullet = Instantiate(prefab, _bulletSpawn.position, Quaternion.AngleAxis(angle, Vector3.forward));
     }
 }

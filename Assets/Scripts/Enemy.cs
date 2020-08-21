@@ -19,12 +19,8 @@ public class Enemy : MonoBehaviour
         _health = Mathf.Clamp(_health + value, 0, maxHealth);
         if (_health == 0)
         {
+            OnDestroyEvent?.Invoke();
             Destroy(gameObject);
         }
-    }
-
-    void OnDestroy()
-    {
-        OnDestroyEvent?.Invoke();
     }
 }

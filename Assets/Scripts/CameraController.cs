@@ -96,12 +96,12 @@ public class CameraController : MonoBehaviour
     [ContextMenu("Shake Camera")]
     public void ApplyCameraShake()
     {
+        StopAllCoroutines();
         StartCoroutine(HandleCameraShake());
     }
 
     private IEnumerator HandleCameraShake()
     {
-        
         List<Vector3> shakePoints = new List<Vector3>();
 
         float randAngle = Random.Range(0, Mathf.PI * 2);

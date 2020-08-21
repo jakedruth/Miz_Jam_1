@@ -6,6 +6,6 @@ public class MainMenuManager : MonoBehaviour
 { 
     public void StartGame()
     {
-        GameManager.instance.LoadNextLevel();
+        GameManager.LoadNextLevel();
     }
 }

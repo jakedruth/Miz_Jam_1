@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public static int LevelIndex { get; private set; } = 0;
-    public static int MaxLevels { get; private set; }
 
-    private RawImage _blackFade;
+    public static bool LoadingLevel { get; private set; }
+
+    public static int LevelIndex { get; private set; }
+
+    public RawImage blackFade;
 
     void Awake()
     {
@@ -23,25 +25,38 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        MaxLevels = SceneManager.sceneCountInBuildSettings;
-        _blackFade = transform.GetChild(0).GetChild(0).GetComponent<RawImage>();
+        LevelIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     private AsyncOperation _loadingLevelAsyncOperation;
-
-    [ContextMenu("Load Next Level")]
-    public void LoadNextLevel()
+    public static void LoadNextLevel()
     {
-        LevelIndex = (LevelIndex + 1) % MaxLevels;
-        StartCoroutine(TransitionToNextLevel());
+        if (LoadingLevel)
+            return;
+
+        int index = SceneManager.GetActiveScene().buildIndex;
+
+        LevelIndex = (index + 1) % SceneManager.sceneCountInBuildSettings;
+
+        instance.StartCoroutine(TransitionToNextLevel());
     }
 
-    private IEnumerator TransitionToNextLevel()
+    public static void ReloadLevel()
     {
+        if (LoadingLevel)
+            return;
+
+        instance.StartCoroutine(TransitionToNextLevel());
+    }
+
+    private static IEnumerator TransitionToNextLevel()
+    {
+        LoadingLevel = true;
+
         const float fadeTime = 0.25f;
         const float minWaitTime = 0.5f;
         
-        Color fadeColor = _blackFade.color;
+        Color fadeColor = instance.blackFade.color;
         float timer = 0;
 
         while (timer < fadeTime)
@@ -51,16 +66,16 @@ public class GameManager : MonoBehaviour
             float p = Mathf.Clamp01(timer / fadeTime);
 
             fadeColor.a = p;
-            _blackFade.color = fadeColor;
+            instance.blackFade.color = fadeColor;
 
             yield return null;
         }
 
-        _loadingLevelAsyncOperation = SceneManager.LoadSceneAsync(LevelIndex);
+        instance._loadingLevelAsyncOperation = SceneManager.LoadSceneAsync(LevelIndex);
 
         yield return new WaitForSeconds(minWaitTime);
 
-        while (!_loadingLevelAsyncOperation.isDone)
+        while (!instance._loadingLevelAsyncOperation.isDone)
             yield return null;
 
         while (timer > 0)
@@ -69,9 +84,11 @@ public class GameManager : MonoBehaviour
             float p = Mathf.Clamp01(timer / fadeTime);
             
             fadeColor.a = p;
-            _blackFade.color = fadeColor;
+            instance.blackFade.color = fadeColor;
 
             yield return null;
         }
+
+        LoadingLevel = false;
     }
 }

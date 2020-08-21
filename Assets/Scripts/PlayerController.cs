@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D _rb2D;
-
     public int maxHealth;
     private int _health;
+    public bool Dead { get; private set; }
 
     public float walkSpeed;
     public float pipeSpeed;
@@ -27,7 +27,11 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        _rb2D = GetComponent<Rigidbody2D>();
+        HealthDisplaySystem.DisplayHP(true);
+        HealthDisplaySystem.SetMaxHP(maxHealth, true);
+        _health = maxHealth;
+
+        transform.Find("Dead").gameObject.SetActive(false);
     }
 
     public void Move(Vector3 input)
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour
                         transform.position = pipe.transform.position;
                         _onPipe = pipe;
                         _velocity = Vector3.zero;
-                        transform.rotation = Quaternion.AngleAxis(_shakeValue = 0, Vector3.forward);
+                        transform.Find("Body").rotation = Quaternion.AngleAxis(_shakeValue = 0, Vector3.forward);
                         
                         FindObjectOfType<CameraController>().AdjustZoomTOverTime(1, 0.75f);
                         //_rb2D.simulated = false;
@@ -114,7 +118,7 @@ public class PlayerController : MonoBehaviour
                 pos = Vector3.MoveTowards(pos, targetPos, velocity.magnitude * Time.deltaTime);
                 transform.position = pos;
 
-                if (pos.Equals(targetPos))
+                if (delta.sqrMagnitude <= 0.001f)
                 {
                     if (_onPipe.isPad)
                     {
@@ -156,7 +160,7 @@ public class PlayerController : MonoBehaviour
             float targetSway = (input.sqrMagnitude < 0.1) ? 0 : maxTilt;
             _shakeValue = Mathf.MoveTowards(_shakeValue, targetSway, acceleration * Time.deltaTime);
             float angle = Mathf.Sin(Time.time * tiltPerSecond) * _shakeValue;
-            transform.GetChild(0).rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.Find("Body").rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             // Movement code
             Vector3 targetVelocity = (input.Equals(Vector3.zero) ? Vector3.zero : input) * walkSpeed;
@@ -166,12 +170,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void AdjustHealth(int value)
+    public void AdjustHealth(int value, Vector3 direction = default)
     {
+        if (Dead)
+            return;
+
         _health = Mathf.Clamp(_health + value, 0, maxHealth);
+        HealthDisplaySystem.SetCurrentHP(_health);
+        FindObjectOfType<CameraController>().ApplyCameraShake();
+
         if (_health == 0)
         {
-            Debug.Log("Dead!");
+            Dead = true;
+            StartCoroutine(OnDead(direction));
         }
+    }
+
+    private IEnumerator OnDead(Vector3 direction)
+    {
+        Destroy(GetComponent<PlayerInput>());
+
+        _onPipe = null;
+        _movingOnPipe = false;
+
+        transform.Find("Body").gameObject.SetActive(false);
+        transform.Find("Dead").gameObject.SetActive(true);
+
+        const float launchSpeed = 15f;
+        const float friction = 50f;
+
+        float speed = launchSpeed;
+
+        int rotateDirection = Random.value > 0.5f ? 1 : -1;
+        const float rotateSpeed = 180;
+
+        while (true)
+        {
+            speed = Mathf.MoveTowards(speed, 0, friction * Time.deltaTime);
+            if (speed <= 0)
+                break;
+            
+            transform.position += direction * speed * Time.deltaTime;
+            transform.Rotate(Vector3.forward, rotateSpeed * rotateDirection * Time.deltaTime);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2.25f);
+
+        GameManager.ReloadLevel();
     }
 }

@@ -1,5 +1,5 @@
 Time Sheet Log
-Total Time: 19:09
+Total Time: 25:13
 
 8/15/2020 - (Hrs Worked 4:48)
 	07:20pm - 09:44pm (2:24) 
@@ -41,9 +41,14 @@ Total Time: 19:09
 		added simple enimies
 		Started the layout of the first level
 
-8/20/2020 - (Hrs Worked )
-	04:07PM - 06:37pm (2:00)
+8/20/2020 - (Hrs Worked 6:04)
+	04:07pm - 06:37pm (2:00)
 		Tested making a webgl build
 		Started working on a main menu
 		added a camera shake
+		Got rid of ammo counts
 		Changed the gun to a machine gun!!!! moar fun
+	10:26pm - 02:00am (4:04)
+		Worked on an hp system
+		Worked on Ammo Display System
+		Fixed a bug or two...
