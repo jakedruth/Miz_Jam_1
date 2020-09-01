@@ -30,6 +30,8 @@ public class OnSwitchListener : MonoBehaviour
                 pipe.RemoveConnection((int) e.direction);
             }
         }
+
+        pipe.UpdateRender();
     }
 }
 

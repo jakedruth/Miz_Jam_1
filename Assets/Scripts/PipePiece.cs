@@ -188,7 +188,7 @@ public class PipePiece : MonoBehaviour
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(i == index);
+            transform?.GetChild(i).gameObject.SetActive(i == index);
         }
     }
 
@@ -258,7 +258,7 @@ public class PipePiece : MonoBehaviour
         }
 
         UpdateRender();
-        connection.UpdateRender();
+        connection?.UpdateRender();
 
         return connection;
     }
@@ -290,7 +290,7 @@ public class PipePiece : MonoBehaviour
             connection.pipeW = null;
 
         UpdateRender();
-        connection.UpdateRender();
+        connection?.UpdateRender();
 
         return connection;
     }

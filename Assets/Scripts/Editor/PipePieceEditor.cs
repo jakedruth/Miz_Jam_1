@@ -36,14 +36,16 @@ public class PipePieceEditor : Editor
         CreateHorizontalToggle(_pipeNProperty, 0);
         CreateHorizontalToggle(_pipeEProperty, 1);
         CreateHorizontalToggle(_pipeSProperty, 2);
-        CreateHorizontalToggle(_pipeWProperty, 3); 
+        CreateHorizontalToggle(_pipeWProperty, 3);
 
         EditorGUILayout.PropertyField(_isPadProperty);
-        
-        serializedObject.ApplyModifiedProperties();
 
-        _targetPipe.UpdateRender();
-        EditorUtility.SetDirty(_targetPipe);
+        if (serializedObject.hasModifiedProperties)
+        {
+            serializedObject.ApplyModifiedProperties();
+            _targetPipe.UpdateRender();
+            EditorUtility.SetDirty(_targetPipe);
+        }
     }
 
     private void CreateHorizontalToggle(SerializedProperty prop, int direction)
@@ -123,6 +125,8 @@ public class PipePieceEditor : Editor
         // Set the next pipe to be the selected game object
         if(connection != null)
             Selection.activeGameObject = connection.gameObject;
+
+        
 
         if (connection != null)
         {

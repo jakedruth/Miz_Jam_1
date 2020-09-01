@@ -58,11 +58,8 @@ public class PlayerController : MonoBehaviour
                         transform.Find("Body").rotation = Quaternion.AngleAxis(_shakeValue = 0, Vector3.forward);
                         
                         FindObjectOfType<CameraController>().AdjustZoomTOverTime(1, 0.75f);
-                        //_rb2D.simulated = false;
-                        Physics2D.IgnoreLayerCollision(
-                            LayerMask.NameToLayer("Player"), 
-                            LayerMask.NameToLayer("Walls"),
-                            true);
+
+                        IgnoreCollisionsWithWorld(true);
 
                         break;
                     }
@@ -74,11 +71,8 @@ public class PlayerController : MonoBehaviour
                 {
                     _onPipe = null;
                     FindObjectOfType<CameraController>().AdjustZoomTOverTime(0, 0.75f);
-                    //_rb2D.simulated = true;
-                    Physics2D.IgnoreLayerCollision(
-                        LayerMask.NameToLayer("Player"),
-                        LayerMask.NameToLayer("Walls"),
-                        false);
+
+                    IgnoreCollisionsWithWorld(false);
                 }
             }
         }
@@ -168,6 +162,16 @@ public class PlayerController : MonoBehaviour
 
             transform.position = transform.position + _velocity * Time.deltaTime;
         }
+    }
+
+    private void IgnoreCollisionsWithWorld(bool value)
+    {
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int wallLayer = LayerMask.NameToLayer("Walls");
+        int waterLayer = LayerMask.NameToLayer("MyWater");
+
+        Physics2D.IgnoreLayerCollision(playerLayer, wallLayer, value);
+        Physics2D.IgnoreLayerCollision(playerLayer, waterLayer, value);
     }
 
     public void AdjustHealth(int value, Vector3 direction = default)

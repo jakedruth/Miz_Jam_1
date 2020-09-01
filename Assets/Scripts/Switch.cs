@@ -14,10 +14,15 @@ public class Switch : MonoBehaviour
         {
             _isOn = value;
             onSwitchChanged?.Invoke(_isOn);
+            foreach (OnSwitchListener l in listeningPipes)
+            {
+                l.HandleOnSwitchChanged(_isOn);
+            }
         }
     }
 
     public UnityEvent<bool> onSwitchChanged;
+    public OnSwitchListener[] listeningPipes;
 
     [ContextMenu("Toggle Switch")]
     public void ToggleSwitch()

@@ -52,3 +52,7 @@ Total Time: 25:13
 		Worked on an hp system
 		Worked on Ammo Display System
 		Fixed a bug or two...
+		
+8/23/2020 - (Hrs Worked )
+	04:47pm - 06:58pm
+		Added more levels

@@ -57,7 +57,8 @@ public class Bullet : MonoBehaviour
                     Destroy(gameObject);
                     Destroy(hit.transform.gameObject);
                     break;
-                case "Ammo":
+                // Case Do Nothing
+                case "Water":
                     break;
             }
         }

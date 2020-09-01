@@ -10,6 +10,7 @@ TagManager:
   - Trigger
   - Crate
   - Ammo
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Walls
   - Player
   - Enemies
-  - 
+  - MyWater
   - 
   - 
   - 

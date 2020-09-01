@@ -45,5 +45,20 @@ public class PlayerInput : MonoBehaviour
 
         _gunController.HandleInput(Input.GetMouseButtonDown(0), Input.GetMouseButton(0));
         _gunController.HandleReloading(Input.GetKeyDown(KeyCode.R) || Input.GetMouseButtonDown(1));
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach (Switch s in FindObjectsOfType<Switch>())
+            {
+                Vector2 delta = s.transform.position - transform.position;
+                const float maxDistance = 1f;
+                if (delta.sqrMagnitude <= maxDistance * maxDistance)
+                {
+                    s.ToggleSwitch();
+                    break;
+                    
+                }
+            }
+        }
     }
 }
